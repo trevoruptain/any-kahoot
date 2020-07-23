@@ -194,7 +194,7 @@ const questions = {
         }
     },
     23: {
-        text: "The Baha'i faith, founded in 1863, was founded by which religious figure?",
+        text: "The Baha'i faith, started in 1863, was founded by which religious figure?",
         type: 'multiple',
         options: {
             1: "Baháʼu'lláh",
@@ -486,7 +486,7 @@ const questions = {
         type: 'boolean'
     },
     56: {
-        text: "Six presidents have died while in office",
+        text: "Six US presidents have died while in office",
         type: 'boolean'
     },
     57: {
@@ -625,4 +625,75 @@ const questions = {
             4: "Trevelyan"
         }
     },
+};
+
+let current = 1;
+const startButton = document.querySelector("button[data-functional-selector=start-button]");
+let nextButtonListener;
+
+startButton.addEventListener("click", () => {
+    listenForQuestion();
+});
+
+const listenForQuestion = button => {
+    if (button) {
+        button.removeEventListener("click", nextButtonListener);
+    }
+
+    const question = document.querySelector("div[data-functional-selector=question-block-title]");
+
+    if (question) {
+        const span = question.children[0];
+        span.innerText = questions[current].text;
+        listenForOptions();
+    } else {
+        setTimeout(listenForQuestion, 20);
+    }
+};
+
+const listenForOptions = () => {
+    const firstOption = document.querySelector("div[data-functional-selector=answer-0]");
+
+    if (firstOption) {
+        const question = questions[current];
+        const questionTitle = document.querySelector("span[data-functional-selector=block-title]");
+        questionTitle.innerText = question.text;
+
+        if (question.type === 'multiple') {
+            for (ord in question.options) {
+                const currentQuestion = document.querySelector(`div[data-functional-selector=answer-${ord - 1}]`);
+                currentQuestion.children[1].children[0].innerText = question.options[ord];
+            }
+        }
+
+        listenForAnswers();
+    } else {
+        setTimeout(listenForOptions, 20);
+    }
+};
+
+const listenForAnswers = () => {
+    const scoreboard = document.querySelector("div[data-functional-selector=scoreboard]");
+
+    if (scoreboard) {
+        const question = questions[current];
+        current += 1;
+        const questionTitle = document.querySelector("span[data-functional-selector=block-title]");
+        questionTitle.innerText = question.text;
+
+        if (question.type === 'multiple') {
+            for (ord in question.options) {
+                const currentQuestion = document.querySelector(`div[data-functional-selector=answer-${ord - 1}]`);
+                currentQuestion.children[1].children[0].innerText = question.options[ord];
+            }
+        }
+
+        const nextButton = document.querySelector("button[data-functional-selector=next-button]");
+
+        nextButtonListener = nextButton.addEventListener("click", e => {
+            listenForQuestion(e.target);
+        });
+    } else {
+        setTimeout(listenForAnswers, 20);
+    }
 };
