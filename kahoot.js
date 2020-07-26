@@ -494,7 +494,7 @@ const questions = {
         type: 'boolean'
     },
     58: {
-        text: "The Boston Bomber was named Timothy McVeigh",
+        text: "Lee Harvey Oswald was arrested in a theater",
         type: 'boolean'
     },
     59: {
